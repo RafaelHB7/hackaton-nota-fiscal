@@ -60,18 +60,29 @@ public class processamentoNotaFiscal {
             Map<String, Object> request = new HashMap<>();
             request.put("model", modelo);
             request.put("prompt", """
-                Extraia todas as informações possível dessa nota fiscal eletronia e gere um JSON com todos os campos que você conseguir identificar.
+                Extraia todas as informações possível dessa nota fiscal eletronia e gere um JSON com todos os campos:
+                {
+                    especie: null,
+                    tipoRecebimento: null,
+                    data: null,
+                    fornecedor: null,
+                    notaFiscal: null,
+                    serie: null,
+                    dataEmissao: null,
+                    naturezaOperacao: null,
+                    vencimento: null,
+                    valorTotal: null,
+                    tipoFrete: null,
+                    contaDebito: null,
+                    contaCredito: null
+                }
             """ + "\n\nDocument :\n" + nota);
             request.put("stream", false);
             
-            String retorno = restTemplate.postForObject(
-                apiUrl, 
-                request, 
-                String.class
-            );
-
+            String retorno = restTemplate.postForObject(apiUrl, request, String.class);
             
             String resposta = objectMapper.readTree(retorno).get("response").asText();
+            
             respostas.add(resposta);
         }
 
